@@ -7,7 +7,7 @@
 #ifdef _WIN32
 const char *handler_path = "bin/crashpad_handler.exe";
 #else
-const char *handler_path = "sentry-native/premake/bin/crashpad_handler";
+const char *handler_path = "sentry-native/premake/bin/Release/crashpad_handler";
 #endif
 
 void initialize_memory(char *mem)
@@ -19,6 +19,9 @@ void startup(void)
 {
     sentry_set_transaction("startup");
     sentry_set_level(SENTRY_LEVEL_ERROR);
+
+    sentry_set_tag("tag1", "value1");
+
 
     sentry_value_t user = sentry_value_new_object();
     sentry_value_set_by_key(user, "id", sentry_value_new_int32(42));
@@ -48,6 +51,8 @@ void send_event(void)
     sentry_value_t contexts = sentry_value_new_object();
     sentry_value_set_by_key(contexts, "gpu", gpu);
     sentry_value_set_by_key(contexts, "os", os);
+
+    sentry_set_tag("tag2", "value2");
 
     sentry_value_t event = sentry_value_new_event();
     sentry_value_set_by_key(event, "message", sentry_value_new_string("Sentry Message Capture"));
